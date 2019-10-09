@@ -18,9 +18,11 @@ yarn install
 ### Generate a distributable web app folder
 
 This creates a minified copy of the code in the `/dist/` directory.
+The environment variable `MQTT_SERVER` specifies the ip address of the server where openHAB is running.
+Omit this environment variable to default to localhost.
 
 ```sh
-yarn build
+MQTT_SERVER=192.168.1.23 yarn build
 ```
 
 In this folder will be an index.html you can open locally or on the Pi's browser.
@@ -32,10 +34,12 @@ This will compile and hot-reload code in realtime.
 It also has the benefit of checking your code and reporting errors when they happen.
 
 ```sh
-yarn run serve
+MQTT_SERVER=192.168.1.23 yarn run serve
 ```
 
-### Lints and fixes files
+As with the build command, the `MQTT_SERVER` environment variable is optional and will default to localhost if omitted, but likely you want to develop from another machine and connect remotely to the openHAB server.
+
+### Lint and fix files
 
 If you need to check for errors without starting the local webserver, you can use the following command.
 
@@ -43,7 +47,7 @@ If you need to check for errors without starting the local webserver, you can us
 yarn run lint
 ```
 
-### Customize configuration
+### Extended features
 
 This app was built using [Vue.js](https://vuejs.org/) and [Vue CLI](https://cli.vuejs.org/).
 For extending the configuration, see [Configuration Reference](https://cli.vuejs.org/config/).
