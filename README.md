@@ -1,5 +1,7 @@
 # hestia-touch-one-ui
 
+[![License](https://img.shields.io/github/license/HestiaPi/hestia-touch-openhab.svg)](https://github.com/HestiaPi/hestia-touch-one-ui/blob/master/LICENSE.md)
+
 ONE UI files shown on the touch LCD.
 
 ## Development and compiling
