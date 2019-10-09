@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import mqtt from 'mqtt'
 
-const host = 'localhost'
+const host = MQTT_SERVER
 const port = '9001'
 const client  = mqtt.connect(`mqtt://${host}:${port}`, { keepalive: 60, connectTimeout: 60000 })
 
@@ -11,21 +11,24 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   plugins: [mqttClientPlugin],
   state: {
-    boostEnabled: false,
-    boostTimeRemaining: '0 minutes',
     currentHumidity: 0,
     currentPressure: '--',
     currentTemperature: 0,
     modes: {
       heat: {
+        boostEnabled: false,
+        boostTimeRemaining: 0,
         running: false,
         setValue: 0,
-        stepSize: 0.5
+        stepSize: 0.5,
       },
+      // 2nd-stage or emergency heating
       heat2: {
         running: false
       },
       cool: {
+        boostEnabled: false,
+        boostTimeRemaining: 0,
         running: false,
         setValue: 0,
         stepSize: 1
@@ -34,9 +37,13 @@ export default new Vuex.Store({
         running: false
       },
       hotwater: {
+        boostEnabled: false,
+        boostTimeRemaining: 0,
         running: false
       },
       humidity: {
+        boostEnabled: false,
+        boostTimeRemaining: 0,
         running: false,
         setValue: 50,
         stepSize: 1
@@ -80,10 +87,43 @@ function mqttClientPlugin(store) {
   store.client = client
 
   const messageCallbacks = {
+    //
+    // Mode-setting topics
+    //
+    'hestia/local/cmnd/coolingmode': message => {
+      if (message === 'ON') {
+        store.state.selectedMode === 'cool'
+      }
+      store.state.modes.cool.boostEnabled = message === 'Boost'
+    },
+    'hestia/local/cmnd/fanmode': message => {
+      if (message === 'ON' || message === 'Auto') {
+        store.state.selectedMode = 'fan'
+      }
+    },
     'hestia/local/cmnd/heatingmode': message => {
       if (message === 'ON' || message === 'Boost') {
         store.state.selectedMode = 'heat'
       }
+      store.state.modes.heat.boostEnabled = message === 'Boost'
+    },
+    'hestia/local/cmnd/hotwatermode': message => {
+      if (message === 'ON' || message === 'Boost') {
+        store.state.selectedMode = 'hotwater'
+      }
+      store.state.modes.hotwater.boostEnabled = message === 'Boost'
+    },
+    'hestia/local/cmnd/humiditymode': message => {
+      if (message === 'ON' || message === 'Boost') {
+        store.state.selectedMode = 'humidity'
+      }
+      store.state.modes.humidity.boostEnabled = message === 'Boost'
+    },
+    //
+    // Power-setting topics
+    //
+    'hestia/local/cmnd/coolingstate/POWER': message => {
+      store.state.modes.cool.running = message === 'ON'
     },
     'hestia/local/cmnd/heatingstate/POWER': message => {
       store.state.modes.heat.running = message === 'ON'
@@ -91,38 +131,33 @@ function mqttClientPlugin(store) {
     'hestia/local/cmnd/heating2state/POWER': message => {
       store.state.modes.heat2.running = message === 'ON'
     },
-    'hestia/local/cmnd/coolingmode': message => {
-      if (message === 'ON') {
-        store.state.selectedMode === 'cool'
-      }
-    },
-    'hestia/local/cmnd/coolingstate/POWER': message => {
-      store.state.modes.cool.running = message === 'ON'
-    },
-    'hestia/local/cmnd/fanmode': message => {
-      if (message === 'ON' || message === 'Auto') {
-        store.state.selectedMode = 'fan'
-      }
-    },
     'hestia/local/cmnd/fanstate/POWER': message => {
       store.state.modes.fan.running = message === 'ON'
-    },
-    'hestia/local/cmnd/hotwatermode': message => {
-      if (message === 'ON' || message === 'Boost') {
-        store.state.selectedMode = 'hotwater'
-      }
     },
     'hestia/local/cmnd/hotwaterstate/POWER': message => {
       store.state.modes.hotwater.running = message === 'ON'
     },
-    'hestia/local/cmnd/humiditymode': message => {
-      if (message === 'ON' || message === 'Boost') {
-        store.state.selectedMode = 'humidity'
-      }
-    },
     'hestia/local/cmnd/humiditystate/POWER': message => {
       store.state.modes.humidity.running = message === 'ON'
     },
+    //
+    // Boost timer topics
+    //
+    'hestia/coolingboostremtime': message => {
+      store.state.modes.cool.boostTimeRemaining = Number(message)
+    },
+    'hestia/heatingboostremtime': message => {
+      store.state.modes.heat.boostTimeRemaining = Number(message)
+    },
+    'hestia/hotwaterboostremtime': message => {
+      store.state.modes.hotwater.boostTimeRemaining = Number(message)
+    },
+    'hestia/humidityboostremtime': message => {
+      store.state.modes.humidity.boostTimeRemaining = Number(message)
+    },
+    //
+    // Status topics
+    //
     'hestia/local/temperature': message => {
       if (store.state.info.tempunit === 'C') {
         store.state.currentTemperature = message
@@ -212,22 +247,6 @@ function mqttClientPlugin(store) {
         }
         store.state.showHeating = true
       }
-    },
-
-    'hestia/heatingboostremtime': message => {
-      store.state.boostTimeRemaining = message
-    },
-
-    'hestia/coolingboostremtime': message => {
-      store.state.boostTimeRemaining = message
-    },
-
-    'hestia/humidityboostremtime': message => {
-      store.state.boostTimeRemaining = message
-    },
-
-    'hestia/hotwaterboostremtime': message => {
-      store.state.boostTimeRemaining = message
     }
   }
 

@@ -84,11 +84,9 @@
         {{ currentHumidity }}<span class="symbol">%</span>
       </div>
     </div>
-    <div class="bottom-container">
-      <!-- Show this when boost mode is on temporarily with a set timer -->
-      <span v-show="boostEnabled && boostTimeRemaining">Boost mode: {{ boostTimeRemaining }} remaining</span>
-      <!-- Show this when boost mode is ON without a timer -->
-      <span v-show="boostEnabled && !boostTimeRemaining">Boost mode ON</span>
+    <div class="bottom-container" v-show="boostEnabled">
+      Boost mode enabled.
+      <span v-show="boostTimeRemaining">{{ boostTimeRemaining }} minute(s) remaining.</span>
     </div>
   </div>
 </template>
@@ -130,8 +128,6 @@ export default {
     // Some variables in $store.state we want to read
     // https://vuex.vuejs.org/guide/state.html#the-mapstate-helper
     ...mapState([
-      'boostEnabled',
-      'boostTimeRemaining',
       'currentTemperature',
       'currentHumidity',
       'icons',
@@ -144,6 +140,18 @@ export default {
       'showHotWater',
       'showHumidity'
     ]),
+    boostEnabled() {
+      const modeState = this.$store.state.modes[this.selectedMode]
+      console.log(modeState)
+      return modeState && modeState.boostEnabled
+    },
+    boostTimeRemaining() {
+      const modeState = this.$store.state.modes[this.selectedMode]
+      if (modeState) {
+        return modeState.boostTimeRemaining
+      }
+      return null
+    },
     targetTemperature() {
       return this.$store.getters.targetTemperature
     }
@@ -201,13 +209,22 @@ export default {
 .active-temp {
   font-size: 30vh;
   left: 3%;
-  top: 25%;
+  line-height: 100%;
+  top: 29%;
   width: 50vw;
 }
 
 .active-temp > .symbol {
   font-size: 18vh;
   vertical-align: text-top;
+}
+
+.bottom-container {
+  bottom: 0;
+  height: 8vh;
+  left: 4%;
+  position: absolute;
+  width: 100%;
 }
 
 .current-temp {
@@ -233,12 +250,6 @@ export default {
 
 .current-humidity > .symbol {
   font-size: 10vh;
-}
-
-.bottom-container {
-  bottom: 0;
-  left: 4%;
-  position: absolute;
 }
 
 .grid {
