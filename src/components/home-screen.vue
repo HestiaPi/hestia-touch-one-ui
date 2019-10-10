@@ -86,7 +86,7 @@
     </div>
     <div class="bottom-container" v-show="boostEnabled">
       Boost mode enabled.
-      <span v-show="boostTimeRemaining">{{ boostTimeRemaining }} minute(s) remaining.</span>
+      <span v-show="boostTimeRemaining">{{ boostTimeRemaining }} min remaining.</span>
     </div>
   </div>
 </template>
@@ -174,6 +174,7 @@ export default {
         this.$store.commit('selectPowerSetting', { mode, powerOption })
         this.lastTappedMode = ''
         this.showPowerModal = false
+        this.selectedMode == mode
       }
       this.showPowerModal = true
     },
