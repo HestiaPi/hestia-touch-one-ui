@@ -335,7 +335,11 @@ function targetTemperature(state) {
   }
   const modeState = state.modes[state.selectedMode]
   if (modeState) {
-    return `${modeState.setValue}<span class="symbol">&deg;</span>`
+    if (state.selectedMode == 'humidity') {
+      return `${modeState.setValue}<span class="symbol">%</span>`
+    } else { //temperature
+      return `${modeState.setValue}<span class="symbol">&deg;</span>`
+    }
   }
   return 'Off'
 }
