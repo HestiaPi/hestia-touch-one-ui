@@ -387,10 +387,8 @@ function selectPowerSetting(state, { mode, powerOption }) {
   // what we want and it will return all the power states for us.
   console.debug(`[sending] ${topics[mode]}: ${powerOption}`)
   client.publish(topics[mode], powerOption)
-  if (state.selectedMode === 'fan') {
-    // This should never happen
-  }
-  else {
+
+  if (state.selectedMode !== 'fan') {
     if (powerOption == 'Boost') {
       state.modes[mode].boostEnabled = true;
     } else {
