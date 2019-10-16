@@ -6,16 +6,6 @@
       v-if="showPowerModal"
       />
     <div class="top-container">
-      <div v-if="showCooling"
-        class="mode-btn cool"
-        :class="{
-          animated: modes.cool.running,
-          'color-cool': (selectedMode || lastTappedMode) === 'cool',
-          'color-off': (selectedMode || lastTappedMode) !== 'cool'
-        }"
-        @click="openPowerModal('cool')">
-        <icon-cool size="80%" />
-      </div>
       <div v-if="showHeating"
         class="mode-btn heat"
         :class="{
@@ -27,6 +17,16 @@
         <!-- Switch out icon for 2nd-stage heating -->
         <icon-heat size="76%" v-if="!modes.heat2.running" />
         <icon-heat2 size="76%" v-if="modes.heat2.running" />
+      </div>
+      <div v-if="showCooling"
+        class="mode-btn cool"
+        :class="{
+          animated: modes.cool.running,
+          'color-cool': (selectedMode || lastTappedMode) === 'cool',
+          'color-off': (selectedMode || lastTappedMode) !== 'cool'
+        }"
+        @click="openPowerModal('cool')">
+        <icon-cool size="80%" />
       </div>
       <div v-if="showFan"
         class="mode-btn fan"
