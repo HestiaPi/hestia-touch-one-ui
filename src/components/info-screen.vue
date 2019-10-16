@@ -81,7 +81,7 @@ export default {
   float: right;
   height: 26vh;
   margin-right: -2.3vh;
-  margin-top: 2.9vh;
+  margin-top: 3.6vh;
   position: absolute;
   right: 0;
   top: 0;
