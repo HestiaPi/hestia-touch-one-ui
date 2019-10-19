@@ -35,6 +35,8 @@ export default {
 </script>
 
 <style>
+html * {cursor:none!important}
+
 html {
   -ms-touch-action: manipulation;
   touch-action: manipulation;
