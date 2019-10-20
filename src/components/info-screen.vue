@@ -52,7 +52,7 @@ export default {
       return this.$store.state.info.ssid
     },
     wlaninfo() {
-      return this.$store.state.info.wlaninfo + ' dBm'
+      return this.$store.state.info.wlaninfo + ' %'
     },
     wlanmac() {
       return this.$store.state.info.wlanmac
