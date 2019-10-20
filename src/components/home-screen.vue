@@ -142,7 +142,6 @@ export default {
     ]),
     boostEnabled() {
       const modeState = this.$store.state.modes[this.selectedMode]
-      console.log(modeState)
       return modeState && modeState.boostEnabled
     },
     boostTimeRemaining() {
