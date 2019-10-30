@@ -58,11 +58,7 @@ export default {
       return this.$store.state.info.wlanmac
     },
     cputemp() {
-      if (this.$store.state.info.tempunit === 'C') {
-        return this.$store.state.info.cputemp + ' °C'
-      } else {
-        return this.$store.state.info.cputemp + ' °F'
-      }
+      return this.$store.state.info.cputemp
     },
     cpuload() {
       return this.$store.state.info.cpuload + ' %'
