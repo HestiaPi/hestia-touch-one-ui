@@ -36,7 +36,7 @@ This will compile and hot-reload code in realtime.
 It also has the benefit of checking your code and reporting errors when they happen.
 
 ```sh
-MQTT_SERVER=192.168.1.23 yarn run serve
+MQTT_SERVER=192.168.1.23 yarn serve
 ```
 
 As with the build command, the `MQTT_SERVER` environment variable is optional and will default to localhost if omitted, but likely you want to develop from another machine and connect remotely to the openHAB server.
@@ -46,10 +46,10 @@ As with the build command, the `MQTT_SERVER` environment variable is optional an
 If you need to check for errors without starting the local webserver, you can use the following command.
 
 ```sh
-yarn run lint
+yarn lint
 ```
 
 ### Extended features
 
-This app was built using [Vue.js](https://vuejs.org/) and [Vue CLI](https://cli.vuejs.org/).
-For extending the configuration, see [Configuration Reference](https://cli.vuejs.org/config/).
+This app was built using [Vue.js](https://vuejs.org/) and [Vue CLI](https://cli.vuejs.org/), although the code should be approachable to anyone with basic knowledge of modern javascript and component architecture.
+For extending and configuring the asset toolchain, see [Configuration Reference](https://cli.vuejs.org/config/).
