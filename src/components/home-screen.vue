@@ -153,9 +153,15 @@ export default {
         if (modeState.boostEnabled) {
           return `${modeText} boost mode, ${modeState.boostTimeRemaining} min. remaining`
         }
-        if (modeState.active) {
-          return `${modeText} auto`
+
+        if ((modeText == 'Fan') && ((modeState.active) || (modeState.running))) {
+          return `${modeText} on`
+        } else {
+          if (modeState.active) {
+            return `${modeText} auto`
+          }
         }
+
         return `${modeText} off`
       }
       return ''
