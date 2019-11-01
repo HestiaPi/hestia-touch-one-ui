@@ -18,7 +18,7 @@ export default {
   computed: {
     colorClass() {
       const mode = this.$store.state.selectedMode
-      if (mode) {
+      if (mode && this.$store.state.modes[mode].active) {
         return {
           [`color-${mode}`]: true
         }

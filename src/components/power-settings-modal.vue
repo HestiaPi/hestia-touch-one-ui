@@ -66,10 +66,6 @@ export default {
           {
             key: 'OFF',
             label: 'Off',
-          },
-          {
-            key: 'AUTO',
-            label: 'Auto'
           }
         ]
       }

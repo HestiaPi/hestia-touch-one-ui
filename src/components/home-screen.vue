@@ -84,9 +84,8 @@
         {{ currentHumidity }}<span class="symbol">%</span>
       </div>
     </div>
-    <div class="bottom-container" v-show="boostEnabled">
-      Boost mode enabled.
-      <span v-show="boostTimeRemaining">{{ boostTimeRemaining }} min.</span>
+    <div class="bottom-container">
+      <div>{{ powerSettingText }}</div>
     </div>
   </div>
 </template>
@@ -140,16 +139,26 @@ export default {
       'showHotWater',
       'showHumidity'
     ]),
-    boostEnabled() {
-      const modeState = this.$store.state.modes[this.selectedMode]
-      return modeState && modeState.boostEnabled
-    },
-    boostTimeRemaining() {
-      const modeState = this.$store.state.modes[this.selectedMode]
-      if (modeState) {
-        return modeState.boostTimeRemaining
+    powerSettingText() {
+      const modes = {
+        cool: () => 'Cooling',
+        heat: () => this.modes.heat2.running ? '2nd-stage heating' : 'Heating',
+        hotwater: () => 'Hot water',
+        humidity: () => 'Humidity control',
+        fan: () => 'Fan'
       }
-      return null
+      if (this.selectedMode && modes[this.selectedMode]) {
+        const modeState = this.modes[this.selectedMode]
+        const modeText = modes[this.selectedMode]()
+        if (modeState.boostEnabled) {
+          return `${modeText} boost mode, ${modeState.boostTimeRemaining} min. remaining`
+        }
+        if (modeState.active) {
+          return `${modeText} auto`
+        }
+        return `${modeText} off`
+      }
+      return ''
     },
     targetTemperature() {
       return this.$store.getters.targetTemperature
@@ -166,10 +175,6 @@ export default {
       // Second tap, open the modal
       this.lastTappedMode = mode
       this.powerModalCallback = powerOption => {
-        // Deselect the mode if turned off
-        if (powerOption === 'OFF') {
-          this.$store.commit('selectMode', '')
-        }
         this.$store.commit('selectPowerSetting', { mode, powerOption })
         this.lastTappedMode = ''
         this.showPowerModal = false
@@ -223,6 +228,7 @@ export default {
   height: 8vh;
   left: 4%;
   position: absolute;
+  text-align: left;
   width: 100%;
 }
 

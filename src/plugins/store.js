@@ -15,11 +15,18 @@ export default new Vuex.Store({
     currentPressure: '--',
     currentTemperature: 0,
     modes: {
+      // Some terminology clarification on mode states:
+      // active: on, but not necessarily running
+      // selected: mode currently visible on the ui, not necessarily active
+      // running: the current relay state as reported by openhab
       heat: {
+        active: false,
         boostEnabled: false,
         boostTimeRemaining: 0,
         running: false,
+        // Target temperature
         setValue: 0,
+        // How much to increment the target temperature with each tap
         stepSize: 0.5,
       },
       // 2nd-stage or emergency heating
@@ -27,6 +34,7 @@ export default new Vuex.Store({
         running: false
       },
       cool: {
+        active: false,
         boostEnabled: false,
         boostTimeRemaining: 0,
         running: false,
@@ -34,14 +42,19 @@ export default new Vuex.Store({
         stepSize: 1
       },
       fan: {
+        active: false,
+        boostEnabled: false, // always false
+        boostTimeRemaining: 0,
         running: false
       },
       hotwater: {
+        active: false,
         boostEnabled: false,
         boostTimeRemaining: 0,
         running: false
       },
       humidity: {
+        active: false,
         boostEnabled: false,
         boostTimeRemaining: 0,
         running: false,
@@ -90,35 +103,11 @@ function mqttClientPlugin(store) {
     //
     // Mode-setting topics
     //
-    'hestia/local/cmnd/coolingmode': message => {
-      if (message === 'ON') {
-        store.state.selectedMode === 'cool'
-      }
-      store.state.modes.cool.boostEnabled = message === 'Boost'
-    },
-    'hestia/local/cmnd/fanmode': message => {
-      if (message === 'ON' || message === 'Auto') {
-        store.state.selectedMode = 'fan'
-      }
-    },
-    'hestia/local/cmnd/heatingmode': message => {
-      if (message === 'ON' || message === 'Boost') {
-        store.state.selectedMode = 'heat'
-      }
-      store.state.modes.heat.boostEnabled = message === 'Boost'
-    },
-    'hestia/local/cmnd/hotwatermode': message => {
-      if (message === 'ON' || message === 'Boost') {
-        store.state.selectedMode = 'hotwater'
-      }
-      store.state.modes.hotwater.boostEnabled = message === 'Boost'
-    },
-    'hestia/local/cmnd/humiditymode': message => {
-      if (message === 'ON' || message === 'Boost') {
-        store.state.selectedMode = 'humidity'
-      }
-      store.state.modes.humidity.boostEnabled = message === 'Boost'
-    },
+    'hestia/local/cmnd/coolingmode': updateMode(store.state, 'cool'),
+    'hestia/local/cmnd/fanmode': updateMode(store.state, 'fan'),
+    'hestia/local/cmnd/heatingmode': updateMode(store.state, 'heat'),
+    'hestia/local/cmnd/hotwatermode': updateMode(store.state, 'hotwater'),
+    'hestia/local/cmnd/humiditymode': updateMode(store.state, 'humidity'),
     //
     // Power-setting topics
     //
@@ -296,14 +285,14 @@ function mqttClientPlugin(store) {
   })
 
   client.on('reconnect', () => {
-    console.debug('Reconnecting to:'+host+"...")
+    console.debug(`Reconnecting to ${host}...`)
   })
 
   client.on('disconnect', () => {
-    console.debug('Disonnected from:'+host)
+    console.debug(`Disonnected from ${host}`)
   })
 
-  client.on('message', function (topic, message, packet) {
+  client.on('message', function(topic, message, packet) {
     // Message is Buffer
     const parsedMessage = message.toString()
     console.debug(`[receiving] ${topic}: ${parsedMessage}`)
@@ -327,7 +316,7 @@ function targetTemperature(state) {
   } else if (state.selectedMode === 'fan') {
     state.showControls = false
     return 'Fan'
-  } else if (state.selectedMode == 'hotwater') {
+  } else if (state.selectedMode === 'hotwater') {
     state.showControls = false
     return 'Hot Water'
   } else {
@@ -367,7 +356,7 @@ function incrementTargetValue(state) {
 }
 
 // Highlight a mode on the screen which will in turn change the UI color
-// mode (string) - 'heat', 'cool', 'humidity', 'hotwater', 'fan', '' (none)
+// mode (string) - 'heat', 'cool', 'humidity', 'hotwater', 'fan', ''
 function selectMode(state, mode) {
   state.selectedMode = mode
 }
@@ -383,18 +372,14 @@ function selectPowerSetting(state, { mode, powerOption }) {
     hotwater: 'hestia/local/stat/hotwatermode',
     humidity: 'hestia/local/stat/humiditymode'
   }
+
   // We don't set a local state for this. Merely report to openhab
   // what we want and it will return all the power states for us.
   console.debug(`[sending] ${topics[mode]}: ${powerOption}`)
   client.publish(topics[mode], powerOption)
 
-  if (state.selectedMode !== 'fan') {
-    if (powerOption == 'Boost') {
-      state.modes[mode].boostEnabled = true;
-    } else {
-      state.modes[mode].boostEnabled = false;
-    }
-  }
+  // Ok I lied, let's eagerly update even though we're going to get an openhab response
+  updateMode(state, mode)(powerOption)
 }
 
 function setTargetValue(state, mode, value) {
@@ -410,4 +395,23 @@ function setTargetValue(state, mode, value) {
 
 function toggleInfoScreen(state) {
   state.showInfoScreen = !state.showInfoScreen
+}
+
+function updateMode(state, mode) {
+  const modeState = state.modes[mode]
+  return powerOption => {
+    if (powerOption === 'ON') {
+      // In case it's not already selected
+      state.selectedMode = mode
+      modeState.active = true
+      modeState.boostEnabled = false
+    } else if (powerOption === 'Boost') {
+      state.selectedMode = mode
+      modeState.active = true
+      modeState.boostEnabled = true
+    } else {
+      modeState.active = false
+      modeState.boostEnabled = false
+    }
+  }
 }
