@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "core-js": "^2.6.5",
+    "just-debounce": "^1.0.0",
     "mqtt": "^3.0.0",
     "register-service-worker": "^1.6.2",
     "typeface-roboto": "^0.0.75",

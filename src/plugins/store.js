@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import mqtt from 'mqtt'
+import debounce from 'just-debounce'
 
 const host = MQTT_SERVER
 const port = '9001'
@@ -337,12 +338,28 @@ function targetTemperature(state) {
 // Mutations
 //
 
+// Publish the data we just stored in the UI's display. This functionality is
+// wrapped in a debounce to prevent sending the server too many messages. For
+// instance changing the humidity setpoint from 51 to 52 to 53 to 54... by tapping
+// the screen multiple times the server will only receive the final message
+// that the new humidity setpoint is 54 and none of the in-between settings.
+const publishTargetValue = debounce((state, mode, value) => {
+  const topics = {
+    cool: 'hestia/local/settempsetpoint',
+    heat: 'hestia/local/settempsetpoint',
+    humidity: 'hestia/local/sethumisetpoint'
+  }
+
+  console.debug(`[sending] ${topics[mode]}: ${value}`)
+  client.publish(topics[mode], value.toString())
+}, 1600)
+
 function decrementTargetValue(state) {
   const modeState = state.modes[state.selectedMode]
   // Applies to heat, cool, and humidity
   if (modeState.setValue !== undefined) {
     modeState.setValue -= modeState.stepSize
-    setTargetValue(state, state.selectedMode, modeState.setValue)
+    publishTargetValue(state, state.selectedMode, modeState.setValue)
   }
 }
 
@@ -351,7 +368,7 @@ function incrementTargetValue(state) {
   // Applies to heat, cool, and humidity
   if (modeState.setValue !== undefined) {
     modeState.setValue += modeState.stepSize
-    setTargetValue(state, state.selectedMode, modeState.setValue)
+    publishTargetValue(state, state.selectedMode, modeState.setValue)
   }
 }
 
@@ -380,17 +397,6 @@ function selectPowerSetting(state, { mode, powerOption }) {
 
   // Ok I lied, let's eagerly update even though we're going to get an openhab response
   updateMode(state, mode)(powerOption)
-}
-
-function setTargetValue(state, mode, value) {
-  const topics = {
-    cool: 'hestia/local/settempsetpoint',
-    heat: 'hestia/local/settempsetpoint',
-    humidity: 'hestia/local/sethumisetpoint'
-  }
-
-  console.debug(`[sending] ${topics[mode]}: ${value}`)
-  client.publish(topics[mode], value.toString())
 }
 
 function toggleInfoScreen(state) {
