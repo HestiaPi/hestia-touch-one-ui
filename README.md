@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/github/license/HestiaPi/hestia-touch-openhab.svg)](https://github.com/HestiaPi/hestia-touch-one-ui/blob/master/LICENSE.md)
 
-ONE UI files shown on the touch LCD.
+ONE UI files shown on the touch LCD. Backend repository is [here](https://github.com/HestiaPi/hestia-touch-openhab).
 
 ## Development and compiling
 
