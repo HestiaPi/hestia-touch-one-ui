@@ -41,6 +41,16 @@ MQTT_SERVER=192.168.1.23 yarn serve
 
 As with the build command, the `MQTT_SERVER` environment variable is optional and will default to localhost if omitted, but likely you want to develop from another machine and connect remotely to the openHAB server.
 
+### Deploy to your HestiaPi instance
+
+After [generating a distributable web app folder](#generate-a-distributable-web-app-folder), you can deploy it to your HestiaPi instance using the following command
+
+```sh
+HESTIA=192.168.1.23 yarn deploy
+```
+
+> :warning: THIS WILL REPLACE YOUR HESTIAPI FILES! Make sure to make a backup if you want a rollback
+
 ### Lint and fix files
 
 If you need to check for errors without starting the local webserver, you can use the following command.
