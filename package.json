@@ -8,6 +8,10 @@
     "lint": "vue-cli-service lint",
     "deploy": "ssh pi@$HESTIA 'rm -r scripts/oneui/*' && scp -r dist/* pi@$HESTIA:scripts/oneui && ssh pi@$HESTIA 'sudo killall -TERM kweb'"
   },
+  "engines": {
+    "node": ">=12",
+    "yarn": ">=1.12"
+  },
   "dependencies": {
     "core-js": "^2.6.5",
     "just-debounce": "^1.0.0",
