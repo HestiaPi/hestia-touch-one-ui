@@ -9,7 +9,7 @@
     "deploy": "ssh pi@$HESTIA 'rm -r scripts/oneui/*' && scp -r dist/* pi@$HESTIA:scripts/oneui && ssh pi@$HESTIA 'sudo killall -TERM kweb'"
   },
   "engines": {
-    "node": ">=12",
+    "node": ">=10.1",
     "yarn": ">=1.12"
   },
   "dependencies": {
