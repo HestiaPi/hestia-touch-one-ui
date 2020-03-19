@@ -1,5 +1,6 @@
 # hestia-touch-one-ui
 
+![CI Status](https://github.com/HestiaPi/hestia-touch-one-ui/workflows/GitHub%20Action%20for%20Yarn/badge.svg)
 [![License](https://img.shields.io/github/license/HestiaPi/hestia-touch-openhab.svg)](https://github.com/HestiaPi/hestia-touch-one-ui/blob/master/LICENSE.md)
 
 ONE UI files shown on the touch LCD. Backend repository is [here](https://github.com/HestiaPi/hestia-touch-openhab).
