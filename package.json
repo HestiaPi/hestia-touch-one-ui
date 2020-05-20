@@ -13,23 +13,23 @@
     "yarn": ">=1.12"
   },
   "dependencies": {
-    "core-js": "^3.6.4",
+    "core-js": "^3.6.5",
     "just-debounce": "^1.0.0",
     "mqtt": "^3.0.0",
-    "register-service-worker": "^1.6.2",
+    "register-service-worker": "^1.7.1",
     "typeface-roboto": "^0.0.75",
-    "vue": "^2.6.10",
-    "vuex": "^3.0.1"
+    "vue": "^2.6.11",
+    "vuex": "^3.4.0"
   },
   "devDependencies": {
-    "@vue/cli": "^4.2.3",
-    "@vue/cli-plugin-babel": "^4.2.3",
-    "@vue/cli-plugin-eslint": "^4.2.3",
-    "@vue/cli-plugin-pwa": "^4.2.3",
-    "@vue/cli-service": "^4.2.3",
-    "babel-eslint": "^10.0.1",
+    "@vue/cli": "^4.3.1",
+    "@vue/cli-plugin-babel": "^4.3.1",
+    "@vue/cli-plugin-eslint": "^4.3.1",
+    "@vue/cli-plugin-pwa": "^4.3.1",
+    "@vue/cli-service": "^4.3.1",
+    "babel-eslint": "^10.1.0",
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
-    "vue-template-compiler": "^2.6.10"
+    "vue-template-compiler": "^2.6.11"
   }
 }
