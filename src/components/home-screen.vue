@@ -85,7 +85,11 @@
       </div>
     </div>
     <div class="bottom-container">
-      <div>{{ powerSettingText }}</div>
+      <div class="power-setting-text">{{ powerSettingText }}</div>
+      <div class="comfort-mode">
+        <span v-if="comfortMode">Comfort mode</span>
+        <span v-else>Comfort range: &plusmn;{{ hysteresis }}&deg;</span>
+      </div>
     </div>
   </div>
 </template>
@@ -127,9 +131,11 @@ export default {
     // Some variables in $store.state we want to read
     // https://vuex.vuejs.org/guide/state.html#the-mapstate-helper
     ...mapState([
+      'comfortMode',
       'currentTemperature',
       'currentHumidity',
       'icons',
+      'hysteresis',
       'modes',
       'selectedMode',
       'showControls',
@@ -218,7 +224,7 @@ export default {
 
 .active-temp {
   font-size: 30vh;
-  left: 3%;
+  left: 2%;
   line-height: 100%;
   top: 29%;
   width: 50vw;
@@ -236,6 +242,18 @@ export default {
   position: absolute;
   text-align: left;
   width: 100%;
+}
+
+.bottom-container > .power-setting-text {
+  display: inline;
+  position: relative;
+}
+
+.bottom-container > .comfort-mode {
+  display: inline;
+  float: right;
+  position: relative;
+  right: 6%;
 }
 
 .current-temp {
@@ -275,7 +293,7 @@ export default {
 .grid-home-icon {
   height: 6vw;
   width: 6vw;
-  right: 0;
+  right: 0.5%;
   bottom: 51%;
 }
 
@@ -313,12 +331,13 @@ export default {
 
 .mode-btn.info {
   position: absolute;
-  right: 0;
+  right: 0.5%;
 }
 
 .top-container {
   color: #e0e5e8;
   height: 25%;
+  left: 0;
   max-height: 25%;
   position: absolute;
   top: 0;
@@ -329,7 +348,7 @@ export default {
   bottom: 0;
   height: 50vh;
   width: 50vw;
-  left: 3%;
+  left: 2%;
 }
 
 .value-controls > div {
