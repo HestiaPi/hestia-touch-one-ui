@@ -80,8 +80,8 @@ export default {
   cursor: pointer;
   float: right;
   height: 26vh;
-  margin-right: -2.3vh;
-  margin-top: 3.6vh;
+  margin-right: 1vh;
+  margin-top: 3.9vh;
   position: absolute;
   right: 0;
   top: 0;
