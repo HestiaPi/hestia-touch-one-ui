@@ -2,7 +2,7 @@
   <svg
     :width="size"
     :height="size"
-    viewBox="0 0 46 46"
+    viewBox="0 0 40 46"
     class="icon"
     fill="none"
     stroke="currentColor"
