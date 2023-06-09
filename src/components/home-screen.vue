@@ -219,7 +219,8 @@ export default {
 
 /* Apply to any mode that is running to give it a glowing effect */
 .animated {
-  animation: changecolor 2s steps(8) infinite alternate;
+  border-top: 5px white solid;
+  margin-top: 15px !important;
 }
 
 .active-temp {
@@ -309,24 +310,24 @@ export default {
   display: inline-block;
   float: left;
   height: 100%;
-  margin-top: 4vh;
+  margin-top: 20px;
   width: 26vh;
 }
 
 .mode-btn.cool {
-  margin-top: 3vh;
+  margin-top: 20px;
 }
 
 .mode-btn.heat {
-  margin-top: 4.4vh;
+  margin-top: 20px;
 }
 
 .mode-btn.humidity {
-  margin-top: 2.8vh;
+  margin-top: 20px;
 }
 
 .mode-btn.hotwater {
-  margin-top: 4.4vh;
+  margin-top: 20px;
 }
 
 .mode-btn.info {
