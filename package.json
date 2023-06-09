@@ -6,7 +6,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "deploy": "ssh pi@$HESTIA 'rm -r scripts/oneui/*' && scp -r dist/* pi@$HESTIA:scripts/oneui && ssh pi@$HESTIA 'sudo killall -TERM kweb'"
+    "deploy": "ssh pi@$HESTIA 'rm -r scripts/oneui/*' && scp -r dist/* pi@$HESTIA:scripts/oneui && ssh pi@$HESTIA 'which kweb && sudo killall -TERM kweb || which midori && sudo killall -TERM midori'"
   },
   "engines": {
     "node": ">=10.1",
