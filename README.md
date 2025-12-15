@@ -20,13 +20,17 @@ yarn install
 
 ### Generate a distributable web app folder
 
-This creates a minified copy of the code in the `/dist/` directory.
+This creates a copy of the code in the `/dist/` directory.
 The environment variable `MQTT_SERVER` specifies the ip address of the server where openHAB is running.
 Omit this environment variable to default to localhost.
 
+**Important**: Due to compatibility requirements with the HestiaPi device's browser (kweb), this project must be built with Node.js 18 using the OpenSSL legacy provider. The build is intentionally not minified to ensure compatibility with the older QtWebKit-based browser.
+
 ```sh
-MQTT_SERVER=192.168.1.23 yarn build
+NODE_OPTIONS=--openssl-legacy-provider MQTT_SERVER=192.168.1.23 yarn build
 ```
+
+**Note**: Always use `yarn` (not npm) for building this project, as the dependency tree is optimized for yarn and the `yarn.lock` file ensures the correct versions are installed for kweb compatibility.
 
 In this folder will be an index.html you can open locally or on the Pi's browser.
 
