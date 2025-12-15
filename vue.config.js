@@ -6,7 +6,10 @@ module.exports = {
       new webpack.DefinePlugin({
         MQTT_SERVER: JSON.stringify(process.env.MQTT_SERVER || 'localhost')
       })
-    ]
+    ],
+    optimization: {
+      minimize: false
+    }
   },
   css: {
     sourceMap: true
