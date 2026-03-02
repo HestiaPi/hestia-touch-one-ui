@@ -1,6 +1,6 @@
 # hestia-touch-one-ui
 
-![CI Status](https://github.com/HestiaPi/hestia-touch-one-ui/workflows/GitHub%20Action%20for%20Yarn/badge.svg)
+![CI Status](https://github.com/HestiaPi/hestia-touch-one-ui/workflows/Build/badge.svg)
 [![License](https://img.shields.io/github/license/HestiaPi/hestia-touch-openhab.svg)](https://github.com/HestiaPi/hestia-touch-one-ui/blob/master/LICENSE.md)
 
 ONE UI files shown on the touch LCD. Backend repository is [here](https://github.com/HestiaPi/hestia-touch-openhab).
@@ -9,13 +9,13 @@ ONE UI files shown on the touch LCD. Backend repository is [here](https://github
 
 ### Setup
 
-Install [nodejs](https://nodejs.org/en/) and [yarn](https://yarnpkg.com/lang/en/) package manager.
+Install [nodejs](https://nodejs.org/en/) LTS or later.
 
-With yarn installed, run the following command to install fonts and other asset dependencies.
+Run the following command to install fonts and other asset dependencies.
 This creates a `/node_modules/` directory.
 
 ```sh
-yarn install
+npm install
 ```
 
 ### Generate a distributable web app folder
@@ -25,7 +25,7 @@ The environment variable `MQTT_SERVER` specifies the ip address of the server wh
 Omit this environment variable to default to localhost.
 
 ```sh
-MQTT_SERVER=192.168.1.23 yarn build
+MQTT_SERVER=192.168.1.23 npm run build
 ```
 
 In this folder will be an index.html you can open locally or on the Pi's browser.
@@ -37,7 +37,7 @@ This will compile and hot-reload code in realtime.
 It also has the benefit of checking your code and reporting errors when they happen.
 
 ```sh
-MQTT_SERVER=192.168.1.23 yarn serve
+MQTT_SERVER=192.168.1.23 npm run build
 ```
 
 As with the build command, the `MQTT_SERVER` environment variable is optional and will default to localhost if omitted, but likely you want to develop from another machine and connect remotely to the openHAB server.
@@ -47,7 +47,7 @@ As with the build command, the `MQTT_SERVER` environment variable is optional an
 After [generating a distributable web app folder](#generate-a-distributable-web-app-folder), you can deploy it to your HestiaPi instance using the following command
 
 ```sh
-HESTIA=192.168.1.23 yarn deploy
+HESTIA=192.168.1.23 npm run deploy
 ```
 
 > :warning: THIS WILL REPLACE YOUR HESTIAPI FILES! Make sure to make a backup if you want a rollback
@@ -57,7 +57,7 @@ HESTIA=192.168.1.23 yarn deploy
 If you need to check for errors without starting the local webserver, you can use the following command.
 
 ```sh
-yarn lint
+npm run lint
 ```
 
 ### Extended features

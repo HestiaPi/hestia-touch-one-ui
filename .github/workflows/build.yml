@@ -1,0 +1,22 @@
+name: Build
+
+on:
+  push:
+
+jobs:
+  linting:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v3
+        with:
+          node-version-file: '.node-version'
+
+      - name: install node modules
+        run: npm install
+
+      - name: lint
+        run: NODE_ENV=production npm run lint
+
+      - name: build
+        run: npm run build
